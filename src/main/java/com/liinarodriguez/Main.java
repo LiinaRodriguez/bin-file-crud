@@ -12,7 +12,7 @@ public class Main {
         FileRepository fr = new FileRepository();
         DatabaseConnection db = new DatabaseConnection();
 
-        File file = fp.processFile("./test_files/info.txt");
+        File file = fp.processFile("./test_files/sk.txt");
         try{
             db.startTransaction();
             fr.save(file);
