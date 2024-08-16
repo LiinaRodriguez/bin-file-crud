@@ -11,5 +11,5 @@ public interface IFileRepository {
     File findById(int id) throws SQLException;
     List<File> findAll() throws SQLException;
     void delete(int id) throws SQLException;
-    void update(File file) throws SQLException;
+    void update(File file, int id) throws SQLException;
 }

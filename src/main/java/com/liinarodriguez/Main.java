@@ -21,8 +21,13 @@ public class Main {
             fr.CreateFileTable();
             fr.delete(0);
             fr.save(file);
-            List<File> files = fr.findAll();
+            file.setName("UpdatedName");
+            fr.update(file, 4);
+            File id_5 = fr.findById(5);
+            System.out.println(id_5.toString());
 
+            List<File> files = fr.findAll();
+            files.forEach(fl -> System.out.println(fl.toString()));
             db.commitTransaction();
         } catch (Exception e) {
             e.printStackTrace();

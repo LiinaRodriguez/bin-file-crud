@@ -28,14 +28,22 @@ public class FileRepository implements IFileRepository {
     @Override
     public File findById(int id) throws SQLException{
         String query = "SELECT * FROM files WHERE id = ?";
-        try(PreparedStatement stmt = conn.prepareStatement(query);
-        ResultSet rs = stmt.executeQuery(query)){
-            File file = new File();
-            file.setId(rs.getInt("id"));
-            file.setName(rs.getString("name"));
-            file.setBinary(rs.getBytes("binary"));
-            System.out.println("File "+ file.getName() + " found");
-            return file;
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) { // Check if there is a result
+                    File file = new File();
+                    file.setId(rs.getInt("id"));
+                    file.setName(rs.getString("name"));
+                    file.setBinary(rs.getBytes("binary"));
+                    System.out.println("File " + file.getName() + " found");
+                    return file;
+                } else {
+                    System.out.println("No file found with id " + id);
+                    return null; // Or throw an exception if you prefer
+                }
+            }
         }
     }
     @Override
@@ -66,12 +74,12 @@ public class FileRepository implements IFileRepository {
         }
     }
     @Override
-    public void update(File file) throws SQLException{
+    public void update(File file, int id) throws SQLException{
         String query = "UPDATE files SET name = ?, binary = ? WHERE id = ?";
         try(PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setString(1, file.getName());
             stmt.setBytes(2, file.getBinary());
-            stmt.setInt(3, file.getId());
+            stmt.setInt(3, id);
             stmt.executeUpdate();
             System.out.println("File"+ file.getName() + " updated");
         }
