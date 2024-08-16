@@ -12,6 +12,9 @@ target/
 *.iml
 *.ipr
 
+bin_file_crud.mv.db
+bin_file_crud.trace.db
+
 ### Eclipse ###
 .apt_generated
 .classpath
