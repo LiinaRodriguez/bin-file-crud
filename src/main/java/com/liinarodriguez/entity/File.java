@@ -3,15 +3,15 @@ package com.liinarodriguez.entity;
 import java.sql.Blob;
 
 public class File {
-    public String id;
+    public int id;
     public String name;
     public byte[] binary;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -29,5 +29,9 @@ public class File {
 
     public void setBinary(byte[] binary) {
         this.binary = binary;
+    }
+    @Override
+    public String toString() {
+        return "File{" + "id=" + id + ", name=" + name + '}';
     }
 }

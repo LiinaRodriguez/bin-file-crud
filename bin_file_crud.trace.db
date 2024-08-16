@@ -202,3 +202,7 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/linnr/I
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
 	... 13 more
+2024-08-15 23:55:57.700101-05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]SEINFORMATION_SCHEMA.CONSTANTS T * FROM FILES"; se esperaba "SAVEPOINT, SCRIPT, SHUTDOWN"
+Syntax error in SQL statement "[*]SEINFORMATION_SCHEMA.CONSTANTS T * FROM FILES"; expected "SAVEPOINT, SCRIPT, SHUTDOWN"; SQL statement:
+SEINFORMATION_SCHEMA.CONSTANTS T * FROM FILES [42001-230]

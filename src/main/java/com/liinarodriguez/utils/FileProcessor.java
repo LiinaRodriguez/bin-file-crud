@@ -3,9 +3,7 @@ package com.liinarodriguez.utils;
 import com.liinarodriguez.entity.File;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.UUID;
 import java.io.FileInputStream;
 
 public class FileProcessor {
@@ -13,7 +11,6 @@ public class FileProcessor {
         File file = new File();
         try{
             byte [] binaryData = readFileToByteArray(path);
-            file.setId(UUID.randomUUID().toString());
             file.setName(path);
             file.setBinary(binaryData);
             System.out.println("Processing file " + file.getName());

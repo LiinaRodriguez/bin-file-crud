@@ -8,14 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileRepository implements IFileRepository {
+    private Connection conn;
+
+    public FileRepository(Connection connection) {
+        this.conn = connection;
+    }
     @Override
     public void save(File file) throws SQLException {
-        String query = "INSERT INTO files(id, name, binary) VALUES (?, ?, ?)";
-        try(Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setString(1, file.getId());
-            stmt.setString(2, file.getName());
-            stmt.setBytes(3, file.getBinary());
+        String query = "INSERT INTO files(name, binary) VALUES (?, ?)";
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setString(1, file.getName());
+            stmt.setBytes(2, file.getBinary());
             stmt.executeUpdate();
             System.out.println("File saved"+ file.getName());
         }catch (SQLException e){
@@ -23,13 +26,12 @@ public class FileRepository implements IFileRepository {
         }
     }
     @Override
-    public File findById(String id) throws SQLException{
+    public File findById(int id) throws SQLException{
         String query = "SELECT * FROM files WHERE id = ?";
-        try(Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query);
+        try(PreparedStatement stmt = conn.prepareStatement(query);
         ResultSet rs = stmt.executeQuery(query)){
             File file = new File();
-            file.setId(rs.getString("id"));
+            file.setId(rs.getInt("id"));
             file.setName(rs.getString("name"));
             file.setBinary(rs.getBytes("binary"));
             System.out.println("File "+ file.getName() + " found");
@@ -40,12 +42,12 @@ public class FileRepository implements IFileRepository {
     public List<File> findAll() throws SQLException{
         String query = "SELECT * FROM files";
         List<File> files = new ArrayList<>();
-        try(Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
+        try(PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery()){
+            System.out.println("List");
             while(rs.next()){
                 File file = new File();
-                file.setId(rs.getString("id"));
+                file.setId(rs.getInt("id"));
                 file.setName(rs.getString("name"));
                 file.setBinary(rs.getBytes("binary"));
                 files.add(file);
@@ -55,11 +57,10 @@ public class FileRepository implements IFileRepository {
         return files;
     }
     @Override
-    public void delete(String id) throws SQLException{
+    public void delete(int id) throws SQLException{
         String query = "DELETE FROM files WHERE id = ?";
-        try(Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setString(1, id);
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, id);
             stmt.executeUpdate();
             System.out.println("File"+ id + "deleted successfully");
         }
@@ -67,23 +68,21 @@ public class FileRepository implements IFileRepository {
     @Override
     public void update(File file) throws SQLException{
         String query = "UPDATE files SET name = ?, binary = ? WHERE id = ?";
-        try(Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(query)){
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setString(1, file.getName());
             stmt.setBytes(2, file.getBinary());
-            stmt.setString(3, file.getId());
+            stmt.setInt(3, file.getId());
             stmt.executeUpdate();
             System.out.println("File"+ file.getName() + " updated");
         }
     }
     public void CreateFileTable(){
         String query =  "CREATE TABLE IF NOT EXISTS files (" +
-                "id VARCHAR (255) PRIMARY KEY," +
+                "id int PRIMARY KEY AUTO_INCREMENT," +
                 "name VARCHAR (255)," +
                 "binary LONGBLOB" +
                 ");";
-        try(Connection conn = DatabaseConnection.getConnection();
-            Statement statement = conn.createStatement()) {
+        try(Statement statement = conn.createStatement()) {
             statement.execute( query);
             System.out.println("Table created successfully");
         } catch (SQLException e) {

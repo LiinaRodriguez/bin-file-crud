@@ -29,7 +29,8 @@ public class DatabaseConnection {
     }
     public void startTransaction(){
         try{
-            connection.setAutoCommit(false);
+            Connection conn = getConnection();
+            conn.setAutoCommit(false);
         }catch (SQLException e){
             e.printStackTrace();
             throw new RuntimeException("Error to init transaction");
@@ -37,27 +38,32 @@ public class DatabaseConnection {
     }
     public void commitTransaction(){
         try{
-            connection.commit();
+            Connection conn = getConnection();
+            conn.commit();
         }catch (SQLException e){
             e.printStackTrace();
-        }throw new RuntimeException("Error to commit transaction");
+            throw new RuntimeException("Error to commit transaction");
+        }
     }
     public void rollbackTransaction(){
         try{
-            connection.rollback();
+            Connection conn = getConnection();
+            conn.rollback();
         }catch (SQLException e){
             e.printStackTrace();
-        }throw new RuntimeException("Error to rollback transaction");
+            throw new RuntimeException("Error to rollback transaction");
+        }
     }
     public void closeConnection(){
         try{
-            if(connection != null && !connection.isClosed()){
-                connection.close();
+            Connection conn = getConnection();
+            if(conn != null && !conn.isClosed()){
+                conn.close();
             }
         }catch (SQLException e){
             e.printStackTrace();
-        }throw new RuntimeException("Error to close connection");
+            throw new RuntimeException("Error to close connection");
+        }
     }
-
 
 }
