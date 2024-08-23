@@ -12,14 +12,18 @@ public class Main {
         System.out.println("Hello world");
         FileProcessor fp = new FileProcessor();
 
-        DatabaseConnection db = new DatabaseConnection();
-        FileRepository fr = new FileRepository(DatabaseConnection.getConnection());
+        DatabaseConnection db = DatabaseConnection.getInstance();
+        FileRepository fr = new FileRepository(db.getConnection());
 
         File file = fp.processFile("./test_files/info.txt");
+        if(file == null ){
+            System.out.println("Archivo no válido");
+        }
         try {
             db.startTransaction();
             fr.CreateFileTable();
             fr.delete(0);
+            assert file != null;
             fr.save(file);
             file.setName("UpdatedName");
             fr.update(file, 4);

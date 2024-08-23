@@ -33,10 +33,11 @@ public class FileRepository implements IFileRepository {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) { // Check if there is a result
-                    File file = new File();
-                    file.setId(rs.getInt("id"));
-                    file.setName(rs.getString("name"));
-                    file.setBinary(rs.getBytes("binary"));
+                    File file = new File.FileBuilder()
+                            .setId(rs.getInt("id"))
+                            .setName(rs.getString("name"))
+                            .setBinary(rs.getBytes("binary"))
+                            .build();
                     System.out.println("File " + file.getName() + " found");
                     return file;
                 } else {
@@ -54,10 +55,11 @@ public class FileRepository implements IFileRepository {
             ResultSet rs = stmt.executeQuery()){
             System.out.println("List");
             while(rs.next()){
-                File file = new File();
-                file.setId(rs.getInt("id"));
-                file.setName(rs.getString("name"));
-                file.setBinary(rs.getBytes("binary"));
+                File file = new File.FileBuilder()
+                                    .setId(rs.getInt("id"))
+                                    .setName(rs.getString("name"))
+                                    .setBinary(rs.getBytes("binary"))
+                                    .build();
                 files.add(file);
             }
             System.out.println(files.size() + "files found");

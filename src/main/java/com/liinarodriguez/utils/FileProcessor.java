@@ -7,14 +7,18 @@ import java.util.Arrays;
 import java.io.FileInputStream;
 
 public class FileProcessor {
-    public File processFile(String path){
-        File file = new File();
-        try{
-            byte [] binaryData = readFileToByteArray(path);
-            file.setName(path);
-            file.setBinary(binaryData);
+    public File processFile(String path) {
+
+        File file = null;
+        try {
+            byte[] binaryData = readFileToByteArray(path);
+            file = new File.FileBuilder()
+                    .setName(path)
+                    .setBinary(binaryData)
+                    .setType("txt")
+                    .build();
             System.out.println("Processing file " + file.getName());
-            System.out.println("bin"+ Arrays.toString(file.getBinary()));
+            System.out.println("bin" + Arrays.toString(file.getBinary()));
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error while reading file");

@@ -7,9 +7,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    public static Connection connection;
+    private static Connection connection;
+    private static DatabaseConnection connectionInstance;
 
-    public DatabaseConnection() {
+    private DatabaseConnection() {
         String url = PropertiesLoader.get("database");
         String username = PropertiesLoader.get("username");
         String password = PropertiesLoader.get("password");
@@ -24,13 +25,19 @@ public class DatabaseConnection {
             System.out.println("Uh-oh! The connection failed");
         }
     }
-    public static Connection getConnection() {
+    public static synchronized DatabaseConnection getInstance() {
+        if (connectionInstance == null) {
+            connectionInstance = new DatabaseConnection();
+        }
+        return connectionInstance;
+    }
+    public Connection getConnection(){
         return connection;
     }
+
     public void startTransaction(){
         try{
-            Connection conn = getConnection();
-            conn.setAutoCommit(false);
+            connection.setAutoCommit(false);
         }catch (SQLException e){
             e.printStackTrace();
             throw new RuntimeException("Error to init transaction");
@@ -38,8 +45,7 @@ public class DatabaseConnection {
     }
     public void commitTransaction(){
         try{
-            Connection conn = getConnection();
-            conn.commit();
+            connection.commit();
         }catch (SQLException e){
             e.printStackTrace();
             throw new RuntimeException("Error to commit transaction");
@@ -47,8 +53,7 @@ public class DatabaseConnection {
     }
     public void rollbackTransaction(){
         try{
-            Connection conn = getConnection();
-            conn.rollback();
+            connection.rollback();
         }catch (SQLException e){
             e.printStackTrace();
             throw new RuntimeException("Error to rollback transaction");
@@ -56,9 +61,9 @@ public class DatabaseConnection {
     }
     public void closeConnection(){
         try{
-            Connection conn = getConnection();
-            if(conn != null && !conn.isClosed()){
-                conn.close();
+
+            if(connection != null && !connection.isClosed()){
+                connection.close();
             }
         }catch (SQLException e){
             e.printStackTrace();
